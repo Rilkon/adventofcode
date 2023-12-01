@@ -5,7 +5,7 @@ PUZZLE_DIR = pathlib.Path(__file__).parent
 
 @pytest.fixture
 def example1():
-    puzzle_input = (PUZZLE_DIR / "example1.txt").read_text().strip()
+    puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
     return aoc.parse(puzzle_input)
 
 

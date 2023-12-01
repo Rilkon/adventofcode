@@ -1,4 +1,1 @@
-distlib==0.3.7
-filelock==3.13.1
-platformdirs==4.0.0
-virtualenv==20.24.7
+regex==2023.10.3
