@@ -21,11 +21,11 @@ translate = {"one": "1",
              "8": "8",
              "9": "9"}
 
-def parse_part1(parsedata):
 
+def parse_part1(parsedata):
     result = []
     for line in parsedata.splitlines():
-        numbers = re.findall(r'\d', line)
+        numbers = re.findall(r"\d", line)
         if len(numbers) == 1:
             numbers.append(numbers[0])
 
@@ -33,8 +33,8 @@ def parse_part1(parsedata):
 
     return result
 
-def parse_part2(parsedata):
 
+def parse_part2(parsedata):
     result = []
     for line in parsedata.splitlines():
         r = re.compile(r"\d | one | two | three | four | five | six | seven | eight | nine", flags=re.I | re.X)
@@ -72,4 +72,3 @@ if __name__ == "__main__":
         puzzle_input = pathlib.Path(path).read_text().strip()
         solutions = solve(puzzle_input)
         print("\n".join(str(solution) for solution in solutions))
-
