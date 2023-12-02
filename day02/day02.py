@@ -12,9 +12,9 @@ def solve_parts(parsedata):
     power = 0
     for game in parsedata.splitlines():
         gameindex += 1
-        sumred = max([int(x) for x in re.compile(r"(\d+) red").findall(game)])
-        sumgreen = max([int(x) for x in re.compile(r"(\d+) green").findall(game)])
-        sumblue = max([int(x) for x in re.compile(r"(\d+) blue").findall(game)])
+        sumred = max([int(x) for x in re.findall(r"(\d+) red", game)])
+        sumgreen = max([int(x) for x in re.findall(r"(\d+) green", game)])
+        sumblue = max([int(x) for x in re.findall(r"(\d+) blue", game)])
         power = power + (sumred * sumgreen * sumblue)
         if sumred <= maxred and sumblue <= maxblue and sumgreen <= maxgreen:
             valid_game_idx.append(gameindex)
