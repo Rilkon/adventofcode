@@ -1,6 +1,7 @@
 import pathlib
 import sys
 import regex as re
+
 maxred = 12
 maxgreen = 13
 maxblue = 14
