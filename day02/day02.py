@@ -7,11 +7,10 @@ maxblue = 14
 
 
 def solve_parts(parsedata):
-    gameindex = 0
     valid_game_idx = []
     power = 0
     for game in parsedata.splitlines():
-        gameindex += 1
+        gameindex = int(re.match(r"Game (\d+)", game).group(1))
         sumred = max([int(x) for x in re.findall(r"(\d+) red", game)])
         sumgreen = max([int(x) for x in re.findall(r"(\d+) green", game)])
         sumblue = max([int(x) for x in re.findall(r"(\d+) blue", game)])
