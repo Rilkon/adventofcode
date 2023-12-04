@@ -7,14 +7,12 @@ import regex as re
 def parse(parsedata):
     cards = []
     for line in parsedata.splitlines():
-        splitstring = line.split(": ")
-        card = re.findall(r"\d+", splitstring[0])[0]
-        splitnums = splitstring[1].split("|")
-        win_nums = {int(x) for x in re.findall(r"\d+", splitnums[0])}
-        you_nums = {int(x) for x in re.findall(r"\d+", splitnums[1])}
-
-        matches = you_nums.intersection(win_nums)
-        cards.append([card, win_nums, you_nums, matches, len(matches)])
+        m = re.compile(r"Card\s+(\d+)\:([\d\s]*)\|([\d\s]*?)$").match(line)
+        card = int(m.group(1))
+        win_nums = {int(x) for x in m.group(2).split(" ") if x != ""}
+        your_nums = {int(x) for x in m.group(3).split(" ") if x != ""}
+        matches = your_nums.intersection(win_nums)
+        cards.append([card, win_nums, your_nums, matches, len(matches)])
 
     return cards
 
