@@ -1,10 +1,10 @@
 import pathlib
 import sys
+
 import regex as re
 
 
 def parse(parsedata):
-
     cards = []
     for line in parsedata.splitlines():
         splitstring = line.split(": ")
@@ -27,14 +27,14 @@ def part1(data):
 
     return points
 
+
 def part2(data):
     card_count = [1] * len(data)
     for i, card in enumerate(data):
-        for j in range(1, card[4]+1):
+        for j in range(1, card[4] + 1):
             card_count[i + j] += card_count[i]
 
     return sum(card_count)
-
 
 
 def solve(puzzle_data):
