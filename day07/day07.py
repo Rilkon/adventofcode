@@ -25,24 +25,6 @@ handvalues = {"fivekind": 100,
               "highcard": 1}
 
 
-def compare_cards(card1, card2):
-    if cardvalues[card1] == cardvalues[card2]:
-        return 0
-    elif cardvalues[card1] > cardvalues[card2]:
-        return 1
-    else:
-        return -1
-
-
-def compare_hands(hand1, hand2):
-    if handvalues[hand1] == handvalues[hand2]:
-        return 0
-    elif handvalues[hand1] > handvalues[hand2]:
-        return 1
-    else:
-        return -1
-
-
 class CamelCardHand():
 
     def __init__(self, cards, bid, ispart2=False):
@@ -51,57 +33,51 @@ class CamelCardHand():
         self.bid = int(bid)
         self.hand = ""
         c = Counter(self.cardlist)
+
+        if ispart2:
+            cardvalues["J"] = 1
+
         match max(c.values()):
             case 5:
                 self.hand = "fivekind"
             case 4:
                 self.hand = "fourkind"
+                if ispart2 and c["J"] >= 1:
+                    self.hand = "fivekind"
             case 3:
                 if c.most_common(2)[-1][1] == 2:
                     self.hand = "fullhouse"
+                    if ispart2 and c["J"] >= 1:
+                        self.hand = "fivekind"
                 else:
                     self.hand = "threekind"
+                    if ispart2 and c["J"] >= 1:
+                        self.hand = "fourkind"
             case 2:
                 if c.most_common(2)[-1][1] == 2:
                     self.hand = "twopair"
+                    if ispart2 and c["J"] == 1:
+                        self.hand = "fullhouse"
+                    elif ispart2 and c["J"] == 2:
+                        self.hand = "fourkind"
                 else:
                     self.hand = "onepair"
+                    if ispart2 and c["J"] >= 1:
+                        self.hand = "threekind"
             case _:
                 self.hand = "highcard"
-
-        # hacky part 2
-        if ispart2:
-            cardvalues["J"] = 1
-            if 'J' in c:
-                match self.hand:
-                    case "highcard":
-                        self.hand = "onepair"
-                    case "onepair":
-                        self.hand = "threekind"
-                    case "twopair":
-                        if c['J'] == 1:
-                            self.hand = "fullhouse"
-                        elif c['J'] == 2:
-                            self.hand = "fourkind"
-                    case "threekind":
-                        self.hand = "fourkind"
-                    case "fullhouse":
-                        self.hand = "fivekind"
-                    case "fourkind":
-                        self.hand = "fivekind"
+                if ispart2 and c["J"] >= 1:
+                    self.hand = "onepair"
 
     def __lt__(self, other):
-        handresult = compare_hands(self.hand, other.hand)
+        handresult = handvalues[self.hand] - handvalues[other.hand]
         if handresult < 0:
             return True
         elif handresult > 0:
             return False
 
         for i in range(0, len(self.cardlist)):
-            currentself = self.cardlist[i]
-            currentother = other.cardlist[i]
-
-            cardresult = compare_cards(currentself, currentother)
+            cardresult = cardvalues[self.cardlist[i]] - cardvalues[other.cardlist[i]]
             if cardresult < 0:
                 return True
             elif cardresult > 0:
