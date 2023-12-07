@@ -28,7 +28,6 @@ handvalues = {"fivekind": 100,
 class CamelCardHand():
 
     def __init__(self, cards, bid, ispart2=False):
-        self.cards = cards
         self.cardlist = list(cards)
         self.bid = int(bid)
         self.hand = ""
@@ -37,37 +36,25 @@ class CamelCardHand():
         if ispart2:
             cardvalues["J"] = 1
 
-        match max(c.values()):
-            case 5:
-                self.hand = "fivekind"
-            case 4:
-                self.hand = "fourkind"
-                if ispart2 and c["J"] >= 1:
-                    self.hand = "fivekind"
-            case 3:
-                if c.most_common(2)[-1][1] == 2:
-                    self.hand = "fullhouse"
-                    if ispart2 and c["J"] >= 1:
-                        self.hand = "fivekind"
-                else:
-                    self.hand = "threekind"
-                    if ispart2 and c["J"] >= 1:
-                        self.hand = "fourkind"
-            case 2:
-                if c.most_common(2)[-1][1] == 2:
-                    self.hand = "twopair"
-                    if ispart2 and c["J"] == 1:
-                        self.hand = "fullhouse"
-                    elif ispart2 and c["J"] == 2:
-                        self.hand = "fourkind"
-                else:
-                    self.hand = "onepair"
-                    if ispart2 and c["J"] >= 1:
-                        self.hand = "threekind"
-            case _:
-                self.hand = "highcard"
-                if ispart2 and c["J"] >= 1:
-                    self.hand = "onepair"
+        max_count = max(c.values())
+        second_most = c.most_common(2)[-1][1]
+        if max_count == 5:
+            self.hand = "fivekind"
+        elif max_count == 4:
+            self.hand = "fourkind" if not ispart2 or c["J"] == 0 else "fivekind"
+        elif max_count == 3:
+            if second_most == 2:
+                self.hand = "fullhouse" if not ispart2 or c["J"] == 0 else "fivekind"
+            else:
+                self.hand = "threekind" if not ispart2 or c["J"] == 0 else "fourkind"
+        elif max_count == 2:
+            if second_most == 2:
+                self.hand = "twopair" if not ispart2 or c["J"] != 1 else "fullhouse"
+                self.hand = "fourkind" if ispart2 and c["J"] == 2 else self.hand
+            else:
+                self.hand = "onepair" if not ispart2 or c["J"] == 0 else "threekind"
+        else:
+            self.hand = "highcard" if not ispart2 or c["J"] == 0 else "onepair"
 
     def __lt__(self, other):
         handresult = handvalues[self.hand] - handvalues[other.hand]
@@ -84,12 +71,6 @@ class CamelCardHand():
                 return False
 
         return False
-
-    def __str__(self):
-        return f"|| Cards: {self.cards}, Bid: {self.bid}, Hand: {self.hand}"
-
-    def __repr__(self):
-        return self.__str__()
 
 
 def parse(parsedata, ispart2=False):
