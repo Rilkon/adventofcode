@@ -25,19 +25,16 @@ def parse(parsedata):
     return galaxies, emptyrows, emptycolumns
 
 
-def expanded_man_dist(a, b, emptyrows, emptycolumns, expansion):
-    # off by one correction
-    if expansion > 1:
-        expansion = expansion - 1
+def expanded_man_dist(a, b, emptyrows, emptycolumns, expansion=1):
     dist = abs(a[1] - b[1]) + abs(a[0] - b[0])
     passed_rows = set(range(*sorted((a[1], b[1]))))
     passed_cols = set(range(*sorted((a[0], b[0]))))
     for row in emptyrows:
         if row in passed_rows:
-            dist += expansion
+            dist += max(1, expansion - 1)
     for col in emptycolumns:
         if col in passed_cols:
-            dist += expansion
+            dist += max(1, expansion - 1)
     return dist
 
 
@@ -46,7 +43,7 @@ def part1(data):
 
     pathsum = 0
     for pairs in set(combinations(galaxies, 2)):
-        pathsum += expanded_man_dist(pairs[0], pairs[1], emptyrows, emptycolumns, expansion=1)
+        pathsum += expanded_man_dist(pairs[0], pairs[1], emptyrows, emptycolumns)
 
     return pathsum
 
@@ -56,7 +53,7 @@ def part2(data):
 
     pathsum = 0
     for pairs in set(combinations(galaxies, 2)):
-        pathsum += expanded_man_dist(pairs[0], pairs[1], emptyrows, emptycolumns, expansion=1_000_000)
+        pathsum += expanded_man_dist(pairs[0], pairs[1], emptyrows, emptycolumns, expansion=999_999)
 
     return pathsum
 
