@@ -31,10 +31,10 @@ def expanded_man_dist(a, b, emptyrows, emptycolumns, expansion=1):
     passed_cols = set(range(*sorted((a[0], b[0]))))
     for row in emptyrows:
         if row in passed_rows:
-            dist += max(1, expansion - 1)
+            dist += expansion
     for col in emptycolumns:
         if col in passed_cols:
-            dist += max(1, expansion - 1)
+            dist += expansion
     return dist
 
 
