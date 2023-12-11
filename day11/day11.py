@@ -5,7 +5,6 @@ from itertools import combinations
 
 
 def parse(parsedata):
-    grid = defaultdict(str)
     emptyrows = set()
     emptycolumns = set()
     galaxies = set()
@@ -16,24 +15,14 @@ def parse(parsedata):
             emptyrows.add(y)
 
         for x, tile in enumerate(line):
-            grid[x, y] = tile
             if tile == "#":
                 galaxies.add((x, y))
 
-    max_x = x
-    max_y = y
-
-    for x in range(0, max_x + 1):
-
-        count = 0
-        for y in range(0, max_y + 1):
-            if grid[x, y] != ".":
-                count += 1
-
-        if count == 0:
+    for x, col in enumerate(["".join(c) for c in zip(*parsedata.splitlines())]):
+        if col.count("#") == 0:
             emptycolumns.add(x)
 
-    return grid, galaxies, emptyrows, emptycolumns
+    return galaxies, emptyrows, emptycolumns
 
 
 def expanded_man_dist(a, b, emptyrows, emptycolumns, expansion):
@@ -53,7 +42,7 @@ def expanded_man_dist(a, b, emptyrows, emptycolumns, expansion):
 
 
 def part1(data):
-    grid, galaxies, emptyrows, emptycolumns = data
+    galaxies, emptyrows, emptycolumns = data
 
     pathsum = 0
     for pairs in set(combinations(galaxies, 2)):
@@ -63,7 +52,7 @@ def part1(data):
 
 
 def part2(data):
-    grid, galaxies, emptyrows, emptycolumns = data
+    galaxies, emptyrows, emptycolumns = data
 
     pathsum = 0
     for pairs in set(combinations(galaxies, 2)):
