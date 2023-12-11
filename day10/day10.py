@@ -61,7 +61,7 @@ def part1and2(data):
 
     # p2
     points = list(set(visited).symmetric_difference(set(grid.keys())))
-    inside = (matplotpath.Path(list(visited)).contains_points(points))
+    inside = matplotpath.Path(list(visited)).contains_points(points)
 
     # Part 1: Half the roundtrip should be the farthest stepdistance
     # Part 2: Sum over list of booleans if each point is inside the path
