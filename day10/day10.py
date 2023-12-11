@@ -40,6 +40,8 @@ def part1and2(data):
     for dx, dy in DELTAS:
         tile = grid[(start[0] + dx, start[1] + dy)]
 
+        if not tile in PIPES.keys():
+            continue
         for dir_x, dir_y in PIPES[tile]:
             # only connecting ones
             if dir_x - dx == 0 and dir_y - dy == 0:
