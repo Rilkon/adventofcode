@@ -50,6 +50,8 @@ def get_arrangement_nums(spring, groups, known):
         return get_arrangement_nums(temp1, groups, known) + get_arrangement_nums(temp2, groups, known)
     elif spring[0] == "#":
 
+        if len(groups) == 0:
+            return 0
         if groups[0] <= len(spring.split(".")[0]):
             temp = spring[groups[0]:]
             groups = groups[1:]
