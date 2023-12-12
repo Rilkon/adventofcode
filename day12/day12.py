@@ -1,92 +1,75 @@
-import itertools
+import functools
 import pathlib
 import sys
 
 
 def parse(parsedata):
-    springs = []
+    combined = []
 
     for line in parsedata.splitlines():
         groups = [int(x) for x in line.split(" ")[1].split(",")]
-        temp = [line.split(" ")[0], groups]
-        springs.append(temp)
+        temp = [line.split(" ")[0], tuple(groups)]
+        combined.append(temp)
 
-    return springs
-
-
-def get_grouping(springs):
-    groups = []
-    for value in springs.split("."):
-        if (c := value.count("#")) >= 1:
-            groups.append(c)
-    return groups
+    return combined
 
 
-def get_combinations(springs):
-    replacements = [".", "#"]
-    combinations = []
-
-    for combination in itertools.product(replacements, repeat=springs.count("?")):
-        temp = iter(combination)
-        result = ''.join(char if char != "?" else next(temp) for char in springs)
-        combinations.append(result)
-
-    return combinations
-
-
-def get_arrangement_nums(spring, groups, known):
-
-    if spring == "" and len(groups) != 0:
-        return 0
-    if spring == "" and len(groups) == 0:
-        return 1
-
-
-    if spring[0] == ".":
-        return get_arrangement_nums(spring[1:], groups, known)
-    elif spring[0] == "?":
-        temp1 = "." + spring[1:]
-        temp2 = "#" + spring[1:]
-        return get_arrangement_nums(temp1, groups, known) + get_arrangement_nums(temp2, groups, known)
-    elif spring[0] == "#":
-
-        if len(groups) == 0:
+@functools.cache
+def get_valid_arrangements(springs, groups, steps=0):
+    if not springs:
+        if len(groups) == 1 and groups[0] == steps or len(groups) == 0 and steps == 0:
+            return 1
+        else:
             return 0
-        if groups[0] <= len(spring.split(".")[0]):
-            temp = spring[groups[0]:]
-            groups = groups[1:]
-            return get_arrangement_nums(temp, groups, known)
 
-    return 0
+    curr_spring = springs[0]
+    new_springs = springs[1:]
 
+    if not groups:
+        curr_group = 0
+    else:
+        curr_group = groups[0]
+
+    new_groups = tuple(groups[1:])
+
+    if curr_spring == ".":
+        if steps == 0:
+            return get_valid_arrangements(new_springs, groups, 0)
+        elif steps == curr_group:
+            return get_valid_arrangements(new_springs, new_groups, 0)
+        else:
+            return 0
+    elif curr_spring == '?':
+        return (get_valid_arrangements("#" + new_springs, groups, steps)
+                + get_valid_arrangements("." + new_springs, groups, steps))
+    elif curr_spring == '#':
+        if steps > curr_group:
+            return 0
+        else:
+            return get_valid_arrangements(new_springs, groups, steps + 1)
+
+    return "error"
 
 
 def unfold_data(data):
-    result = []
-
+    unfolded = []
     for springs, groups in data:
-        result.append(["?".join([springs]*5), groups * 5])
-
-    return result
+        unfolded.append(["?".join([springs] * 5), tuple(groups * 5)])
+    return unfolded
 
 
 def part1(data):
-    count = 0
+    result = []
     for springs, groups in data:
-        for combi in get_combinations(springs):
-            if get_grouping(combi) == groups:
-                count += 1
-
-    return count
+        result.append(get_valid_arrangements(springs, groups))
+    return sum(result)
 
 
 def part2(data):
-
     result = []
     for springs, groups in unfold_data(data):
-        result.append(get_arrangement_nums(springs, groups, ""))
+        result.append(get_valid_arrangements(springs, groups))
 
-    print(result)
     return sum(result)
 
 
