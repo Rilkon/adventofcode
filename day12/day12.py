@@ -34,11 +34,34 @@ def get_combinations(springs):
     return combinations
 
 
+def get_arrangement_nums(spring, groups, known):
+
+    if spring == "" and len(groups != 0):
+        return 0
+    if spring == "" and len(groups == 0):
+        return 1
+
+
+    if spring[0] == ".":
+        return get_arrangement_nums(spring[1:], groups, known)
+    elif spring[0] == "?":
+        temp1 = "." + spring[1:]
+        temp2 = "#" + spring[1:]
+        return get_arrangement_nums(spring, groups, known) + get_arrangement_nums(spring, groups, known)
+    elif spring[0] == "#":
+
+        if groups[0] <= len(spring.split(".")[0]):
+            temp = spring[groups[0]:]
+            groups = groups[1:]
+        return get_arrangement_nums(temp, groups, known)
+
+
+
 def unfold_data(data):
     result = []
 
     for springs, groups in data:
-        result.append([springs + "?" + springs + "?" + springs + "?" + springs + "?" + springs, groups * 5])
+        result.append(["?".join([springs]*5), groups * 5])
 
     return result
 
@@ -54,7 +77,13 @@ def part1(data):
 
 
 def part2(data):
-    return part1(unfold_data(data))
+
+    result = []
+    for springs, groups in unfold_data(data):
+        result.append(get_arrangement_nums(springs, groups, ""))
+
+    print(result)
+    return sum(result)
 
 
 def solve(puzzle_data):
