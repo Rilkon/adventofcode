@@ -36,9 +36,9 @@ def get_combinations(springs):
 
 def get_arrangement_nums(spring, groups, known):
 
-    if spring == "" and len(groups != 0):
+    if spring == "" and len(groups) != 0:
         return 0
-    if spring == "" and len(groups == 0):
+    if spring == "" and len(groups) == 0:
         return 1
 
 
@@ -53,7 +53,9 @@ def get_arrangement_nums(spring, groups, known):
         if groups[0] <= len(spring.split(".")[0]):
             temp = spring[groups[0]:]
             groups = groups[1:]
-        return get_arrangement_nums(temp, groups, known)
+            return get_arrangement_nums(temp, groups, known)
+
+    return 0
 
 
 
