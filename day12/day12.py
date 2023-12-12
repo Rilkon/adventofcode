@@ -48,7 +48,7 @@ def get_valid_arrangements(springs, groups, steps=0):
         else:
             return get_valid_arrangements(new_springs, groups, steps + 1)
 
-    return "error"
+    return 0
 
 
 def unfold_data(data):
