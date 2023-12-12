@@ -47,7 +47,7 @@ def get_arrangement_nums(spring, groups, known):
     elif spring[0] == "?":
         temp1 = "." + spring[1:]
         temp2 = "#" + spring[1:]
-        return get_arrangement_nums(spring, groups, known) + get_arrangement_nums(spring, groups, known)
+        return get_arrangement_nums(temp1, groups, known) + get_arrangement_nums(temp2, groups, known)
     elif spring[0] == "#":
 
         if groups[0] <= len(spring.split(".")[0]):
