@@ -1,5 +1,6 @@
 import pathlib
 import sys
+from Levenshtein import distance as levenshtein_distance
 
 
 def parse(parsedata):
@@ -20,13 +21,19 @@ def parse(parsedata):
     return row_patterns, col_patterns
 
 
-def find_mirror(pattern):
+def find_mirror(pattern, smudge=0):
     count = 0
     for i in range(1, len(pattern)):
         flipped = reversed(pattern[:i])
         remaining = pattern[i:]
-        if all(a == b for a, b in zip(remaining, flipped)):
+
+        dist = 0
+        for a, b in zip(remaining, flipped):
+            dist += levenshtein_distance(a, b, score_cutoff=1)
+
+        if dist == smudge:
             count += i
+
     return count
 
 
@@ -40,7 +47,12 @@ def part1(data):
 
 
 def part2(data):
-    return ""
+    row_patterns, col_patterns = data
+
+    row = sum(find_mirror(pattern, 1) for pattern in row_patterns)
+    col = sum(find_mirror(pattern, 1) for pattern in col_patterns)
+
+    return (row * 100) + col
 
 
 def solve(puzzle_data):
