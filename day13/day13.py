@@ -5,18 +5,10 @@ from Levenshtein import distance as levenshtein_distance
 
 def parse(parsedata):
     row_patterns = []
-    for pattern in parsedata.split("\n\n"):
-        grid = []
-        for line in pattern.splitlines():
-            grid.append(line)
-        row_patterns.append(grid)
-
     col_patterns = []
     for pattern in parsedata.split("\n\n"):
-        grid = []
-        for col in ["".join(c) for c in zip(*pattern.splitlines())]:
-            grid.append(col)
-        col_patterns.append(grid)
+        row_patterns.append([line for line in pattern.splitlines()])
+        col_patterns.append(["".join(c) for c in zip(*pattern.splitlines())])
 
     return row_patterns, col_patterns
 
