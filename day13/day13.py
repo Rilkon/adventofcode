@@ -22,6 +22,8 @@ def find_mirror(pattern, smudge=0):
         dist = 0
         for a, b in zip(remaining, flipped):
             dist += levenshtein_distance(a, b, score_cutoff=1)
+            if dist > smudge:
+                break
 
         if dist == smudge:
             count += i
