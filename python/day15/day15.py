@@ -33,7 +33,11 @@ def part2(data):
     result = 0
     for _key in hashmap:
         for i, focal_length in enumerate(hashmap[_key].values(), start=1):
+            print(_key, hashmap[_key].items())
+            print(f"curr result {result} + new value {(1 + _key) * i * focal_length}")
             result += (1 + _key) * i * focal_length
+
+    print(hashmap)
     return result
 
 
