@@ -1,54 +1,64 @@
+using System.Collections.Specialized;
 
-
-class SolveDay15
+class SolveDay15(String path)
 {
-    private readonly string path = "";
-    private readonly string[] input;
-    private readonly long[] times;
-    private readonly long[] records;
+    private readonly string[] input = File.ReadAllText(path).Trim().Split(',');
 
-    public SolveDay15(String path)
+    private static int Hash(string line)
     {
-        this.path = path;
-        this.input = File.ReadAllLines(path);
-
-
-        this.times = this.input[0]
-                .Substring("Time:".Length)
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(long.Parse)
-                .ToArray();
-
-        this.records = this.input[1]
-                .Substring("Distance:".Length)
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(long.Parse)
-                .ToArray();
+        int curr = 0;
+        foreach (char c in line)
+        { curr = (curr + ((int)c)) * 17 % 256; }
+        return curr;
     }
 
 
-    private int GetWaysToWin(long[] times, long[] records)
-    {
-        int total = 1;
-        for (int race = 0; race < times.Length; race++)
-        {
-            total *= Enumerable.Range(0, (int)times[race])
-                    .Count(time => time * (times[race] - time) > records[race]);
-        }
-        return total;
-    }
     public int Part1()
     {
-        return GetWaysToWin(this.times, this.records);
+        return this.input.Select(Hash).Sum();
     }
-
 
     public int Part2()
     {
-        long totalTime = long.Parse(string.Join("", this.times));
-        long record = long.Parse(string.Join("", this.records));
+    Dictionary<int, OrderedDictionary> hashmap = [];
 
-        return GetWaysToWin([totalTime], [record]);
+        foreach (string label in this.input)
+        {
+            if (label.Contains('='))
+            {
+                string[] parts = label.Split("=");
+                string _key = parts[0];
+                int focal_length = int.Parse(parts[1]);
+                int hash = Hash(_key);
+                if (!hashmap.ContainsKey(hash))
+                {
+                    hashmap[hash] = [];
+                }
+                hashmap[hash][_key] = focal_length;
+            }
+            else if (label.Contains('-'))
+            {
+                string _key = label.Split("-")[0];
+                int hash = Hash(_key);
+                if (hashmap.ContainsKey(hash))
+                {
+                    hashmap[hash].Remove(_key);
+                }
+            }
+        }
 
+        int result = 0;
+        foreach (int key in hashmap.Keys)
+        {
+            int i = 1;
+            foreach (int focal_length in hashmap[key].Values)
+            {
+                result += (1 + key) * i * focal_length;
+                i++;
+            }
+        }
+
+        return result;
     }
+
 }
