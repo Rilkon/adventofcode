@@ -55,11 +55,12 @@ def process_wf2(_key, wf, ranges):
         return math.prod(upper - lower + 1 for lower, upper in ranges.values())
 
     total = 0
-
     for rule, _next in wf[_key]:
         temp_ranges = ranges.copy()
 
-        if rule is not None:
+        if rule is None:
+            total += process_wf2(_next, wf, ranges)
+        else:
             k, op, value = rule[0], rule[1], int(rule[2:])
 
             if op == ">" and ranges[k] is not None and value < ranges[k][1]:
@@ -71,9 +72,6 @@ def process_wf2(_key, wf, ranges):
                 temp_ranges[k] = (ranges[k][0], min(value - 1, ranges[k][1]))
                 total += process_wf2(_next, wf, temp_ranges)
                 ranges[k] = (value, ranges[k][1]) if value <= ranges[k][1] else None
-
-        else:
-            total += process_wf2(_next, wf, ranges)
 
     return total
 
@@ -91,7 +89,7 @@ def part1(data):
 
 def part2(data):
     wf, _ = data
-    ranges = {"x": [1, 4000], "m": [1, 4000], "a": [1, 4000], "s": [1, 4000]}
+    ranges = {"x": (1, 4000), "m": (1, 4000), "a": (1, 4000), "s": (1, 4000)}
     return process_wf2("in", wf, ranges)
 
 
