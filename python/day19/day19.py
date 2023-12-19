@@ -26,7 +26,7 @@ def parse(parsedata):
 
 
 def process_workflow(wf, x, m, a, s):
-    _key = 'in'
+    _key = "in"
     i = 0
 
     while _key not in {"A", "R"}:
