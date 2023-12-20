@@ -54,14 +54,6 @@ class CommunicationModule():
         self.inputs = []
         self.name = name
         self.outputs = []
-        self.lowpulses = 0
-        self.highpulses = 0
-
-    def send_pulse(self, pulse, sender):
-        if pulse:
-            self.highpulses += 1
-        else:
-            self.lowpulses += 1
 
     def init_memory(self):
         return
@@ -72,27 +64,12 @@ class BroadcastModule(CommunicationModule):
     def __init__(self, name):
         super().__init__(name)
 
-    def send_pulse(self, pulse, sender):
-        super().send_pulse(pulse, sender)
-        for entry in self.outputs:
-            entry.send_pulse(pulse, self)
-
 
 class FlipFlopModule(CommunicationModule):
 
     def __init__(self, name):
         super().__init__(name)
         self.state = False
-
-    def send_pulse(self, pulse, sender):
-        super().send_pulse(pulse, sender)
-
-        if pulse:
-            return
-        else:
-            self.state = not self.state
-            for entry in self.outputs:
-                entry.send_pulse(self.state, self)
 
 
 class ConjunctionModule(CommunicationModule):
@@ -108,18 +85,6 @@ class ConjunctionModule(CommunicationModule):
         for entry in self.inputs:
             self.memory[entry] = False
 
-    def send_pulse(self, pulse, sender):
-        super().send_pulse(pulse, sender)
-
-        self.memory[sender] = pulse
-
-        if all(p for p in self.memory.values()):
-            for entry in self.outputs:
-                entry.send_pulse(False, self)
-        else:
-            for entry in self.outputs:
-                entry.send_pulse(True, self)
-
 
 def part1(data):
     mymodules = data.copy()
@@ -129,9 +94,6 @@ def part1(data):
     q = deque()
     for i in range(1000):
         q.append((None, mymodules["broadcaster"], False))
-
-        # read part 1 wrong, so the whole OO send_pulse stuff is pretty much obsolete
-        # and even the class model would not really have been necessary
 
         while q:
             sender, module, state = q.popleft()
@@ -156,32 +118,20 @@ def part1(data):
 
 
 def part2(data):
-    mymodules = data.copy()
+    mymodules = data
 
     cycles = []
+    # found manually using graphviz
+    # Shoutouts to https://www.devtoolsdaily.com/graphviz/
     values_cycle = ["db", "qx", "gf", "vc"]
-    # values_cycle = ["zl", "xf", "xn", "qn"]
-
-    cycle_count = 0
 
     q = deque()
-    for i in range(0, 1_000_000_000_000):
+    # start at 1001 because copy() does not reset the state of all those objects
+    for i in range(1001, 1_000_000_000_000):
         q.append((None, mymodules["broadcaster"], False))
-
 
         while q:
             sender, module, state = q.popleft()
-
-            if module.name in values_cycle:
-                if all(module.memory.values()):
-                    cycles.append((int(i)))
-
-                    if len(cycles) == 4:
-                        result = []
-                        for cy in cycles:
-                            result.append(cy + 1)
-
-                        return math.lcm(*result), math.lcm(*cycles), math.prod(cycles)
 
             if isinstance(module, ConjunctionModule):
                 module.memory[sender] = state
@@ -193,13 +143,18 @@ def part2(data):
                     state = not module.state
                     module.state = state
 
-            if module.name == "rx" and not state:
-                return i
+            # cycle detection
+            if module.name in values_cycle:
+                if all(module.memory.values()):
+                    cycles.append(int(i))
+            if len(cycles) == 4:
+                result = []
+                for cy in cycles:
+                    result.append(cy)
+                return math.lcm(*result)
 
             for next_mod in module.outputs:
                 q.append((module, next_mod, state))
-
-    return i
 
 
 def solve(puzzle_data):
