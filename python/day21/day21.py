@@ -66,6 +66,9 @@ def part2(data):
     # grid, start, max_x, max_y = data
     #
     # allgoals = {}
+
+    # found the pattern after endless debugging. Repeat is basically every 131 but *2 because of odd/even pattern
+    # expanding from the center outwards.
     # for value in [65, 65+262, 65+262*2]:
     #     q = deque()
     #     q.append((start, 0))
