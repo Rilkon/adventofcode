@@ -26,9 +26,9 @@
 // Console.WriteLine($"Part 1: {solver.Part1()}");
 // Console.WriteLine($"Part 2: {solver.Part2()}");
 
-var solver = new SolveDay23("day23/input.txt");
+var solver = new SolveDay23("day23/example.txt");
 
 Console.WriteLine($"{solver}");
-Console.WriteLine($"Part 1: {solver.Part1()}");
-Console.WriteLine($"Part 2: {solver.Part2()}");
+Console.WriteLine($"Part 1: {solver.PartOne()}");
+Console.WriteLine($"Part 2: {solver.PartTwo()}");
 

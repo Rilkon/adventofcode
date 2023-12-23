@@ -122,13 +122,13 @@ class SolveDay23
         return Dfs(grid, Tuple.Create(1, 0), end);
     }
 
-    public int Part1()
+    public int PartOne()
     {
         var data = Parse(this.input);
         return SolveBothParts(data);
     }
 
-    public int Part2()
+    public int PartTwo()
     {
 
 
