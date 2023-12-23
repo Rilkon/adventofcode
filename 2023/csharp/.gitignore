@@ -2,3 +2,5 @@
 /obj/
 /bin/
 /inputs/
+**/input.txt
+**/example*.txt
