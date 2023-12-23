@@ -1,3 +1,6 @@
 # Project exclude paths
 /venv/
 /inputs/
+**/input.txt
+**/example.txt
+**/example*.txt
