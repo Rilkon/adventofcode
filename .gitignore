@@ -2,5 +2,4 @@
 /venv/
 /inputs/
 **/input.txt
-**/example.txt
-**/example*.txt
+/.idea/
