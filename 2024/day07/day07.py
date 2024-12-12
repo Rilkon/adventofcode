@@ -4,15 +4,7 @@ from copy import deepcopy
 
 
 def parse(parsedata):
-    calclist = []
-    for line in parsedata.splitlines():
-        entry = []
-
-        left, right = line.split(": ")
-        entry = [int(left), list(map(int, right.split(" ")))]
-        calclist.append(entry)
-
-    return calclist
+    return [[int(left), list(map(int, right.split(" ")))] for line in parsedata.splitlines() for left, right in [line.split(": ")]]
 
 
 def elephant_math(result, nums, part2=False):
