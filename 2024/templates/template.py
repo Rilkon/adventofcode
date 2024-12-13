@@ -1,22 +1,20 @@
 import pathlib
 import sys
+from copy import deepcopy
 
 
 def parse(parsedata):
     return ""
 
-
-def part1(data):
+def part1(file_system):
     return ""
 
-
-def part2(data):
+def part2(blocks_and_gaps):
     return ""
-
 
 def solve(puzzle_data):
     data = parse(puzzle_data)
-    solution1 = part1(data)
+    solution1 = part1(deepcopy(data))
     solution2 = part2(data)
     return solution1, solution2
 
