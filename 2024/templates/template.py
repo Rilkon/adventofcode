@@ -6,10 +6,10 @@ from copy import deepcopy
 def parse(parsedata):
     return ""
 
-def part1(file_system):
+def part1(data):
     return ""
 
-def part2(blocks_and_gaps):
+def part2(data):
     return ""
 
 def solve(puzzle_data):
