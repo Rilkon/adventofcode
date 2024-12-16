@@ -5,3 +5,4 @@ pandas~=2.1.4
 matplotlib~=3.8.2
 Levenshtein~=0.23.0
 shapely~=2.0.6
+networkx~=3.4.2
