@@ -30,6 +30,8 @@ class ChronospacialComputer:
                 return self.b
             case 6:
                 return self.c
+            case 7:
+                raise ValueError("Invalid operation")
             case _:
                 return op
 
@@ -65,7 +67,7 @@ class ChronospacialComputer:
                 command(op)
                 self.ip += 2
 
-        return self.result
+        return self.result[:-1]
 
 
 def part1(data):
@@ -74,7 +76,25 @@ def part1(data):
 
 
 def part2(data):
-    return ""
+
+    a, b, c, instructions = data
+    compare_value_str = str(int("".join(map(str, instructions))))
+    compare_length = len(compare_value_str)
+    valid_numbers = [0]
+
+    for length in range(1, compare_length - 1):
+        prev_numbers = valid_numbers
+        valid_numbers = []
+
+
+        for num in prev_numbers:
+            for offset in range(8):
+                new_a = 8 * num + offset
+                result = "".join(ChronospacialComputer(new_a, b, c, instructions).run().split(","))
+                if result == compare_value_str[-length:]:
+                    valid_numbers.append(new_a)
+
+    return min(valid_numbers)
 
 
 def solve(puzzle_data):
