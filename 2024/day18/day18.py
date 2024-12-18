@@ -1,5 +1,5 @@
-# removed imports and f-strings to run in pypy (probably 3 times quicker runtime)
 import collections
+import pathlib
 import sys
 from copy import deepcopy
 
@@ -88,8 +88,7 @@ def solve(puzzle_data):
 
 if __name__ == "__main__":
     for path in sys.argv[1:]:
-        with open(path, 'r') as f:
-            puzzle_input = f.read().strip()
+        print(f"{path}:")
+        puzzle_input = pathlib.Path(path).read_text().strip()
         solutions = solve(puzzle_input)
-        for solution in solutions:
-            print(solution)
+        print("\n".join(str(solution) for solution in solutions))
