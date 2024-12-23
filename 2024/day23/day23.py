@@ -3,16 +3,20 @@ import sys
 from copy import deepcopy
 import networkx as nx
 
+
 def parse(parsedata):
     return nx.Graph([line.split("-") for line in parsedata.splitlines()])
+
 
 def part1(g):
     cliques = nx.enumerate_all_cliques(g)
     return len([x for x in cliques if len(x) == 3 and any(node.startswith("t") for node in x)])
 
+
 def part2(g):
     cliques = nx.find_cliques(g)
     return ",".join(sorted(max(cliques, key=len)))
+
 
 def solve(puzzle_data):
     data = parse(puzzle_data)
