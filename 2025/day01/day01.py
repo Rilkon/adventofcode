@@ -4,13 +4,37 @@ from copy import deepcopy
 
 
 def parse(parsedata):
-    return ""
+    instructions = []
+    for line in parsedata.splitlines():
+        instructions.append([1 if line[0] == "R" else -1, int(line[1:])])
+
+    return instructions
+
 
 def part1(data):
-    return ""
+    position = 50
+    count = 0
+
+    for instr in data:
+        position = (position + (instr[0] * instr[1])) % 100
+        if position == 0:
+            count += 1
+
+    return count
+
 
 def part2(data):
-    return ""
+    position = 50
+    count = 0
+
+    for instr in data:
+        for _ in range(instr[1]):
+            position = (position + instr[0]) % 100
+            if position == 0:
+                count += 1
+
+    return count
+
 
 def solve(puzzle_data):
     data = parse(puzzle_data)
