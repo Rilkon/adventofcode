@@ -1,7 +1,7 @@
 import pathlib
 import sys
 from copy import deepcopy
-
+import timeit
 
 DIRS = [(0,1), (1,0), (1,1), (0,-1), (-1,0), (-1, -1), (1,-1), (-1,1)]
 
@@ -42,7 +42,9 @@ def solve(puzzle_data):
 
 if __name__ == "__main__":
     for path in sys.argv[1:]:
+        time1 = timeit.default_timer()
         print(f"{path}:")
         puzzle_input = pathlib.Path(path).read_text().strip()
         solutions = solve(puzzle_input)
         print("\n".join(str(solution) for solution in solutions))
+        print(timeit.default_timer() - time1)
